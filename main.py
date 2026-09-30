@@ -135,70 +135,85 @@ import xml.etree.ElementTree as ET
 # =============================================================================
 async def get_live_news_urls(topic: str = "Tech", limit: int = 3) -> List[str]:
     """
-    Discovers high-quality, real-time live news URLs for ANY domain or custom keyword
-    using Algolia News Search & Direct Topic Feeds (100% direct links, zero API key required).
+    Discovers real-time breaking news URLs for ANY domain or custom keyword (Politics, Tech,
+    Business, Health, Regional/National) across major verified news feeds with zero API keys required.
     """
     logger.info(f"Discovering live news articles for topic/domain: '{topic}'...")
     urls: List[str] = []
-    topic_clean = topic.strip().lower()
+    topic_words = [w.lower() for w in topic.strip().split() if len(w) > 2]
+    
+    # List of verified major news feeds (The Hindu, BBC World, BBC India, Tech)
+    live_feeds = [
+        "https://www.thehindu.com/news/national/feeder/default.rss",
+        "https://www.thehindu.com/news/national/other-states/feeder/default.rss",
+        "https://www.thehindu.com/business/feeder/default.rss",
+        "https://www.thehindu.com/sci-tech/health/feeder/default.rss",
+        "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml",
+        "https://feeds.bbci.co.uk/news/world/rss.xml",
+        "https://feeds.bbci.co.uk/news/business/rss.xml",
+        "https://feeds.bbci.co.uk/news/technology/rss.xml",
+    ]
 
-    # Source 1: Algolia Real-Time Search (Works for ANY topic, keyword, or domain)
-    try:
-        encoded_topic = urllib.parse.quote(topic)
-        api_url = f"https://hn.algolia.com/api/v1/search?query={encoded_topic}&tags=story&hitsPerPage=12"
-        async with httpx.AsyncClient(timeout=6.0) as client:
-            res = await client.get(api_url)
-            hits = res.json().get("hits", [])
-            for item in hits:
-                url = item.get("url")
-                title = item.get("title")
-                # Exclude internal forum self-posts or non-http links
-                if url and url.startswith("http") and not url.startswith("https://news.ycombinator.com"):
-                    urls.append(url)
-                    logger.info(f"Found story: '{title}' -> {url}")
-                    if len(urls) >= limit:
-                        break
-    except Exception as e:
-        logger.warning(f"Algolia live search query failed: {e}")
+    # 1. Search across verified live RSS feeds matching keywords in title or summary
+    async with httpx.AsyncClient(timeout=6.0, follow_redirects=True) as client:
+        for feed in live_feeds:
+            try:
+                res = await client.get(feed)
+                if res.status_code == 200 and res.text:
+                    root = ET.fromstring(res.text)
+                    for item in root.findall(".//item"):
+                        title = (item.find("title").text if item.find("title") is not None else "") or ""
+                        desc = (item.find("description").text if item.find("description") is not None else "") or ""
+                        link = (item.find("link").text if item.find("link") is not None else "") or ""
+                        
+                        combined_text = f"{title} {desc}".lower()
+                        # Check if any topic word matches
+                        if any(w in combined_text for w in topic_words) and link.startswith("http") and link not in urls:
+                            urls.append(link.strip())
+                            logger.info(f"Matched live news: '{title}' -> {link}")
+                            if len(urls) >= limit:
+                                break
+            except Exception:
+                continue
+            if len(urls) >= limit:
+                break
 
-    # Source 2: Topic-specific direct RSS feeds as supplementary source
+    # 2. If Tech / AI or more articles needed, query Hacker News Algolia Live Search
     if len(urls) < limit:
-        rss_map = {
-            "business": "https://feeds.bbci.co.uk/news/business/rss.xml",
-            "health": "https://feeds.bbci.co.uk/news/health/rss.xml",
-            "politics": "https://feeds.bbci.co.uk/news/world/rss.xml",
-            "world": "https://feeds.bbci.co.uk/news/world/rss.xml",
-            "tech": "https://feeds.bbci.co.uk/news/technology/rss.xml",
-        }
-        target_feed = rss_map.get(topic_clean, "https://dev.to/api/articles/latest?per_page=3")
         try:
-            async with httpx.AsyncClient(timeout=6.0, follow_redirects=True) as client:
-                res = await client.get(target_feed)
-                if res.status_code == 200:
-                    if "rss" in target_feed or "xml" in target_feed:
-                        root = ET.fromstring(res.text)
-                        for item in root.findall(".//item"):
-                            link_elem = item.find("link")
-                            if link_elem is not None and link_elem.text and link_elem.text not in urls:
-                                urls.append(link_elem.text.strip())
-                                if len(urls) >= limit:
-                                    break
-                    elif "dev.to" in target_feed:
-                        items = res.json()
-                        for itm in items:
-                            if itm.get("url") and itm.get("url") not in urls:
-                                urls.append(itm["url"])
-                                if len(urls) >= limit:
-                                    break
+            encoded_topic = urllib.parse.quote(topic)
+            api_url = f"https://hn.algolia.com/api/v1/search?query={encoded_topic}&tags=story&hitsPerPage=10"
+            async with httpx.AsyncClient(timeout=6.0) as client:
+                res = await client.get(api_url)
+                hits = res.json().get("hits", [])
+                for item in hits:
+                    url = item.get("url")
+                    title = item.get("title")
+                    if url and url.startswith("http") and not url.startswith("https://news.ycombinator.com") and url not in urls:
+                        urls.append(url)
+                        logger.info(f"Found via Algolia: '{title}' -> {url}")
+                        if len(urls) >= limit:
+                            break
         except Exception as e:
-            logger.warning(f"Direct topic feed fallback failed: {e}")
+            logger.warning(f"Algolia search fallback query failed: {e}")
 
-    # Fallback if both sources failed
-    if not urls:
-        urls = [
-            "https://dev.to/api/articles/latest?per_page=1",
-            "https://feeds.bbci.co.uk/news/technology/rss.xml"
-        ]
+    # 3. Fallback to latest breaking general headlines if topic had no exact matches
+    if len(urls) < limit:
+        try:
+            async with httpx.AsyncClient(timeout=6.0) as client:
+                res = await client.get("https://www.thehindu.com/news/national/feeder/default.rss")
+                if res.status_code == 200:
+                    root = ET.fromstring(res.text)
+                    for item in root.findall(".//item"):
+                        link = (item.find("link").text if item.find("link") is not None else "") or ""
+                        title = (item.find("title").text if item.find("title") is not None else "") or ""
+                        if link.startswith("http") and link not in urls:
+                            urls.append(link.strip())
+                            logger.info(f"Included top headline: '{title}' -> {link}")
+                            if len(urls) >= limit:
+                                break
+        except Exception:
+            pass
 
     # Deduplicate and return requested limit
     unique_urls = list(dict.fromkeys(urls))
