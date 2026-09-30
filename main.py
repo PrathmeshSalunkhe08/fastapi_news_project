@@ -136,47 +136,62 @@ import xml.etree.ElementTree as ET
 async def get_live_news_urls(topic: str = "Tech", limit: int = 3) -> List[str]:
     """
     Discovers high-quality, real-time live news URLs for ANY domain or custom keyword
-    using Google News RSS Search & Hacker News Algolia (100% free, zero API key required).
+    using Algolia News Search & Direct Topic Feeds (100% direct links, zero API key required).
     """
     logger.info(f"Discovering live news articles for topic/domain: '{topic}'...")
     urls: List[str] = []
+    topic_clean = topic.strip().lower()
 
-    # Source 1: Google News RSS Global Search (Works accurately for ANY topic/keyword)
+    # Source 1: Algolia Real-Time Search (Works for ANY topic, keyword, or domain)
     try:
         encoded_topic = urllib.parse.quote(topic)
-        google_news_url = f"https://news.google.com/rss/search?q={encoded_topic}&hl=en-US&gl=US&ceid=US:en"
-        async with httpx.AsyncClient(timeout=6.0, follow_redirects=True) as client:
-            res = await client.get(google_news_url)
-            if res.status_code == 200 and res.text:
-                root = ET.fromstring(res.text)
-                for item in root.findall(".//item"):
-                    link_elem = item.find("link")
-                    title_elem = item.find("title")
-                    if link_elem is not None and link_elem.text:
-                        urls.append(link_elem.text.strip())
-                        logger.info(f"Found via Google News: '{title_elem.text if title_elem is not None else ''}'")
-                        if len(urls) >= limit:
-                            break
+        api_url = f"https://hn.algolia.com/api/v1/search?query={encoded_topic}&tags=story&hitsPerPage=12"
+        async with httpx.AsyncClient(timeout=6.0) as client:
+            res = await client.get(api_url)
+            hits = res.json().get("hits", [])
+            for item in hits:
+                url = item.get("url")
+                title = item.get("title")
+                # Exclude internal forum self-posts or non-http links
+                if url and url.startswith("http") and not url.startswith("https://news.ycombinator.com"):
+                    urls.append(url)
+                    logger.info(f"Found story: '{title}' -> {url}")
+                    if len(urls) >= limit:
+                        break
     except Exception as e:
-        logger.warning(f"Google News RSS query failed: {e}")
+        logger.warning(f"Algolia live search query failed: {e}")
 
-    # Source 2: Hacker News Search (Secondary backup for tech / startup topics)
+    # Source 2: Topic-specific direct RSS feeds as supplementary source
     if len(urls) < limit:
+        rss_map = {
+            "business": "https://feeds.bbci.co.uk/news/business/rss.xml",
+            "health": "https://feeds.bbci.co.uk/news/health/rss.xml",
+            "politics": "https://feeds.bbci.co.uk/news/world/rss.xml",
+            "world": "https://feeds.bbci.co.uk/news/world/rss.xml",
+            "tech": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+        }
+        target_feed = rss_map.get(topic_clean, "https://dev.to/api/articles/latest?per_page=3")
         try:
-            api_url = f"https://hn.algolia.com/api/v1/search?query={urllib.parse.quote(topic)}&tags=story&hitsPerPage=10"
-            async with httpx.AsyncClient(timeout=6.0) as client:
-                res = await client.get(api_url)
-                hits = res.json().get("hits", [])
-                for item in hits:
-                    url = item.get("url")
-                    title = item.get("title")
-                    if url and url.startswith("http") and url not in urls:
-                        urls.append(url)
-                        logger.info(f"Found via Hacker News: '{title}' -> {url}")
-                        if len(urls) >= limit:
-                            break
+            async with httpx.AsyncClient(timeout=6.0, follow_redirects=True) as client:
+                res = await client.get(target_feed)
+                if res.status_code == 200:
+                    if "rss" in target_feed or "xml" in target_feed:
+                        root = ET.fromstring(res.text)
+                        for item in root.findall(".//item"):
+                            link_elem = item.find("link")
+                            if link_elem is not None and link_elem.text and link_elem.text not in urls:
+                                urls.append(link_elem.text.strip())
+                                if len(urls) >= limit:
+                                    break
+                    elif "dev.to" in target_feed:
+                        items = res.json()
+                        for itm in items:
+                            if itm.get("url") and itm.get("url") not in urls:
+                                urls.append(itm["url"])
+                                if len(urls) >= limit:
+                                    break
         except Exception as e:
-            logger.warning(f"Hacker News query failed: {e}")
+            logger.warning(f"Direct topic feed fallback failed: {e}")
 
     # Fallback if both sources failed
     if not urls:
@@ -226,9 +241,8 @@ async def process_article_with_llm(structured_llm, article: ArticleInput) -> Opt
     """Sends article content to structured LLM and validates output with Pydantic."""
     logger.info(f"LLM processing started for: {article.url}")
     readable_text = clean_html_content(article.content)
-    if not readable_text or len(readable_text) < 50:
-        logger.warning(f"Insufficient readable text extracted for {article.url}, skipping LLM.")
-        return None
+    if not readable_text or len(readable_text) < 30:
+        readable_text = article.content[:1000]
 
     if structured_llm is None:
         # Fallback simulation mode
@@ -253,7 +267,7 @@ async def process_article_with_llm(structured_llm, article: ArticleInput) -> Opt
         ),
         (
             "human",
-            "Article Source URL: {url}\n\nCleaned Article Content:\n{content}"
+            "Article Source URL: {url}\n\nArticle Content:\n{content}"
         )
     ])
     chain = prompt | structured_llm
@@ -287,20 +301,25 @@ async def main():
     
     selected_domain = "Tech"
     try:
-        choice = input("\nEnter your choice (1-4) or press Enter for default [1]: ").strip()
-        if choice == "2":
-            selected_domain = "Business"
-        elif choice == "3":
-            selected_domain = "Health"
-        elif choice == "4":
-            custom = input("Enter custom topic/keyword (e.g., Crypto, Climate, Space, OpenAI): ").strip()
-            selected_domain = custom if custom else "Tech"
-        elif choice == "1" or not choice:
+        user_input = input("\nEnter choice (1-4) or type any keyword directly [Default: Tech]: ").strip()
+        user_input_lower = user_input.lower()
+        
+        if user_input == "1" or user_input_lower in ["tech", "ai", "technology", ""]:
             selected_domain = "Tech"
+        elif user_input == "2" or user_input_lower in ["business", "finance", "economy"]:
+            selected_domain = "Business"
+        elif user_input == "3" or user_input_lower in ["health", "medicine", "medical"]:
+            selected_domain = "Health"
+        elif user_input == "4":
+            custom = input("Enter custom topic/keyword (e.g., Politics, Crypto, Space, OpenAI, Climate): ").strip()
+            selected_domain = custom if custom else "Tech"
+        else:
+            # User directly typed a word like 'POLITICS', 'CRYPTO', 'CRICKET', etc.
+            selected_domain = user_input.title()
     except Exception:
         selected_domain = "Tech"
 
-    print(f"\n>> Selected Domain: '{selected_domain}'")
+    print(f"\n>> Selected Domain / Keyword: '{selected_domain}'")
 
     # Step 1: Prepare URLs (Live News + Error Resilience Endpoints)
     live_urls = await get_live_news_urls(topic=selected_domain, limit=3)
