@@ -126,31 +126,68 @@ async def fetch_all_sequentially(urls: List[str]) -> List[ArticleInput]:
     return results
 
 
+import urllib.parse
+import xml.etree.ElementTree as ET
+
+
 # =============================================================================
-# 4. DYNAMIC LIVE NEWS DISCOVERY WITH TOPIC / DOMAIN FILTERING
+# 4. DYNAMIC LIVE NEWS DISCOVERY WITH MULTI-SOURCE & CUSTOM TOPIC SEARCH
 # =============================================================================
 async def get_live_news_urls(topic: str = "Tech", limit: int = 3) -> List[str]:
     """
-    Discovers real-time breaking news article URLs based on user's selected domain/topic
-    via Hacker News Algolia API (100% free, zero API key required).
+    Discovers high-quality, real-time live news URLs for ANY domain or custom keyword
+    using Google News RSS Search & Hacker News Algolia (100% free, zero API key required).
     """
-    query = "" if topic.lower() in ["all", "general", "tech"] else topic
-    api_url = f"https://hn.algolia.com/api/v1/search_by_date?query={query}&tags=story&hitsPerPage={limit * 3}"
-    logger.info(f"Discovering live news articles for domain/topic: '{topic}'...")
+    logger.info(f"Discovering live news articles for topic/domain: '{topic}'...")
+    urls: List[str] = []
+
+    # Source 1: Google News RSS Global Search (Works accurately for ANY topic/keyword)
     try:
-        async with httpx.AsyncClient(timeout=6.0) as client:
-            res = await client.get(api_url)
-            hits = res.json().get("hits", [])
-            urls = [item["url"] for item in hits if item.get("url", "").startswith("http")]
-            # Remove duplicate domains/urls
-            unique_urls = list(dict.fromkeys(urls))
-            return unique_urls[:limit]
+        encoded_topic = urllib.parse.quote(topic)
+        google_news_url = f"https://news.google.com/rss/search?q={encoded_topic}&hl=en-US&gl=US&ceid=US:en"
+        async with httpx.AsyncClient(timeout=6.0, follow_redirects=True) as client:
+            res = await client.get(google_news_url)
+            if res.status_code == 200 and res.text:
+                root = ET.fromstring(res.text)
+                for item in root.findall(".//item"):
+                    link_elem = item.find("link")
+                    title_elem = item.find("title")
+                    if link_elem is not None and link_elem.text:
+                        urls.append(link_elem.text.strip())
+                        logger.info(f"Found via Google News: '{title_elem.text if title_elem is not None else ''}'")
+                        if len(urls) >= limit:
+                            break
     except Exception as e:
-        logger.warning(f"Live discovery query failed ({e}), using fallback feed.")
-        return [
+        logger.warning(f"Google News RSS query failed: {e}")
+
+    # Source 2: Hacker News Search (Secondary backup for tech / startup topics)
+    if len(urls) < limit:
+        try:
+            api_url = f"https://hn.algolia.com/api/v1/search?query={urllib.parse.quote(topic)}&tags=story&hitsPerPage=10"
+            async with httpx.AsyncClient(timeout=6.0) as client:
+                res = await client.get(api_url)
+                hits = res.json().get("hits", [])
+                for item in hits:
+                    url = item.get("url")
+                    title = item.get("title")
+                    if url and url.startswith("http") and url not in urls:
+                        urls.append(url)
+                        logger.info(f"Found via Hacker News: '{title}' -> {url}")
+                        if len(urls) >= limit:
+                            break
+        except Exception as e:
+            logger.warning(f"Hacker News query failed: {e}")
+
+    # Fallback if both sources failed
+    if not urls:
+        urls = [
             "https://dev.to/api/articles/latest?per_page=1",
             "https://feeds.bbci.co.uk/news/technology/rss.xml"
         ]
+
+    # Deduplicate and return requested limit
+    unique_urls = list(dict.fromkeys(urls))
+    return unique_urls[:limit]
 
 
 import re
