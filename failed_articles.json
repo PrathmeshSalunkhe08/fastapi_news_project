@@ -7,6 +7,6 @@
   {
     "url": "https://httpbin.org/delay/15",
     "fetch_status": "failed",
-    "error": "Timeout"
+    "error": "Connection timed out"
   }
 ]
