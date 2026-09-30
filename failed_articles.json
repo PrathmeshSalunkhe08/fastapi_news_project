@@ -1,0 +1,12 @@
+[
+  {
+    "url": "https://httpbin.org/status/404",
+    "fetch_status": "failed",
+    "error": "HTTP 404"
+  },
+  {
+    "url": "https://httpbin.org/delay/15",
+    "fetch_status": "failed",
+    "error": "Timeout"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Jacques Barzun on the Decline of the University\u2019s Intellectual Mission",
+    "summary": "The article profiles Jacques Barzun, a distinguished cultural historian and longtime Columbia University professor, highlighting his lifelong mission to bring order to the arts and ideas through rigorous scholarship. In a recent interview, Barzun laments the rise of a \"credentials society\" that values diplomas over genuine intelligence, arguing that modern universities have drifted from their original purpose of fostering deep, practical thinking. He stresses the importance of preserving the university\u2019s role as a crucible for great ideas that enhance critical judgment and the ability to organize knowledge, warning that the current emphasis on qualifications undermines true intellectual development.",
+    "topics": [
+      "Jacques Barzun",
+      "Higher Education",
+      "Credentials Society",
+      "Cultural History",
+      "University Reform"
+    ],
+    "urgency_score": 2,
+    "category": "Other"
+  },
+  {
+    "title": "proxy\u2011scraper: Open\u2011Source Engine Delivering Verified Free Proxies and Rotating Proxy Service",
+    "summary": "The open\u2011source project\u202fproxy\u2011scraper aggregates public HTTP, SOCKS4 and SOCKS5 proxies from over 700 sources, automatically discarding dead entries, honeypots and those that inject scripts. By testing 3.6\u202fmillion proxies daily, it retains roughly 1\u202f% that reliably respond, and it continuously learns which sources are most trustworthy. The tool can output a live, hourly\u2011updated list, serve a rotating proxy endpoint, and even provide an MCP server tailored for AI agents, all via simple pipx, Docker or direct source installations. Its extensive documentation, GitHub Actions integration, and community\u2011driven roadmap make it a practical solution for developers, data\u2011scrapers, and AI workloads that need dependable, low\u2011cost proxy access.",
+    "topics": [
+      "Free proxy verification",
+      "Rotating proxy server",
+      "AI agent integration (MCP)",
+      "Open\u2011source networking tools",
+      "Cybersecurity hygiene"
+    ],
+    "urgency_score": 5,
+    "category": "Tech"
+  },
+  {
+    "title": "Chalmers Unveils Autonomous AI Scientist That Generates and Validates Biological Discoveries",
+    "summary": "Researchers at Chalmers University of Technology have built a closed\u2011loop AI system that can formulate biological hypotheses, design and run experiments on brewer's yeast, and interpret the results without human intervention. By integrating large language models, automated reasoning and laboratory robotics, the AI \"scientist\" identified promising questions from vast genomic and metabolic data, proposed experiments, evaluated outcomes, and refined its knowledge iteratively. The team argues that such autonomous laboratories will dramatically accelerate discovery in biology, medicine and biotechnology, while still requiring human scientists for strategic direction, ethical oversight and broader interpretation.",
+    "topics": [
+      "AI scientist",
+      "autonomous laboratories",
+      "self\u2011driving labs",
+      "Saccharomyces cerevisiae research",
+      "hypothesis generation",
+      "Chalmers University of Technology"
+    ],
+    "urgency_score": 7,
+    "category": "Tech"
+  }
+]
