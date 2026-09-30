@@ -14,6 +14,7 @@ load_dotenv()
 
 # Setup simple logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
+logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger("NewsSummarizer")
 
 
@@ -189,14 +190,29 @@ async def main():
         with open("failed_articles.json", "w", encoding="utf-8") as f:
             json.dump(failed, f, indent=2)
 
-    # Step 6: Print clean final summary
-    print("\n" + "=" * 65)
-    print(f" [DONE] Processed: {len(insights)} | Handled Errors: {len(failed)}")
-    print("=" * 65)
+    # Step 6: Print clean final summary dashboard
+    print("\n" + "=" * 70)
+    print(" [REPORT] EXECUTION SUMMARY DASHBOARD")
+    print("=" * 70)
+    print(f" • Domain Selected       : {domain_name}")
+    print(f" • Total URLs Ingested   : {len(urls_to_scrape)}")
+    print(f" • Successfully Analyzed : {len(insights)}")
+    print(f" • Handled Errors/Tests  : {len(failed)}")
+    print(f" • Output File Saved To  : {os.path.abspath('final_insights.json')}")
+    print("=" * 70)
 
     if insights:
-        print("\nGenerated Insights Preview:\n")
-        print(json.dumps(insights, indent=2))
+        print("\n" + "-" * 70)
+        print(" [INSIGHTS] ARTICLE SUMMARIES & RATINGS")
+        print("-" * 70)
+        for i, item in enumerate(insights, 1):
+            print(f"\n[{i}] {item.get('title')}")
+            print(f"    Category : {item.get('category')}  |  Urgency Score : {item.get('urgency_score')}/10")
+            print(f"    Topics   : {', '.join(item.get('topics', []))}")
+            print(f"    Summary  : {item.get('summary')}")
+            print("-" * 70)
+
+    print("\n" + "=" * 70 + "\n")
 
 
 if __name__ == "__main__":
