@@ -8,12 +8,12 @@ A Python application that demonstrates asynchronous web scraping with `httpx` an
 
 ```mermaid
 flowchart TD
-    A[Article URLs] --> B[Async HTTP Fetcher (httpx + asyncio)]
-    B --> C{HTTP / Timeout Errors?}
-    C -->|Handled / Retried| D[ArticleInput Pydantic Model]
-    D --> E[LangChain Structured LLM]
-    E --> F[LLMArticleInsight Pydantic Validation]
-    F --> G[final_insights.json]
+    A["Article URLs"] --> B["Async HTTP Fetcher (httpx + asyncio)"]
+    B --> C{"HTTP / Timeout Errors?"}
+    C -->|Handled / Retried| D["ArticleInput Pydantic Model"]
+    D --> E["LangChain Structured LLM"]
+    E --> F["LLMArticleInsight Pydantic Validation"]
+    F --> G["final_insights.json"]
 ```
 
 ---
