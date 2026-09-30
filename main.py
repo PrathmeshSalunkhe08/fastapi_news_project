@@ -127,19 +127,26 @@ async def fetch_all_sequentially(urls: List[str]) -> List[ArticleInput]:
 
 
 # =============================================================================
-# 4. DYNAMIC LIVE NEWS DISCOVERY (Zero API-Key Required)
+# 4. DYNAMIC LIVE NEWS DISCOVERY WITH TOPIC / DOMAIN FILTERING
 # =============================================================================
-async def get_live_news_urls(limit: int = 3) -> List[str]:
-    """Discovers real-time breaking news article URLs via Hacker News Algolia API."""
-    api_url = f"https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage={limit * 2}"
-    logger.info("Discovering real-time live news URLs...")
+async def get_live_news_urls(topic: str = "Tech", limit: int = 3) -> List[str]:
+    """
+    Discovers real-time breaking news article URLs based on user's selected domain/topic
+    via Hacker News Algolia API (100% free, zero API key required).
+    """
+    query = "" if topic.lower() in ["all", "general", "tech"] else topic
+    api_url = f"https://hn.algolia.com/api/v1/search_by_date?query={query}&tags=story&hitsPerPage={limit * 3}"
+    logger.info(f"Discovering live news articles for domain/topic: '{topic}'...")
     try:
         async with httpx.AsyncClient(timeout=6.0) as client:
             res = await client.get(api_url)
             hits = res.json().get("hits", [])
             urls = [item["url"] for item in hits if item.get("url", "").startswith("http")]
-            return urls[:limit]
-    except Exception:
+            # Remove duplicate domains/urls
+            unique_urls = list(dict.fromkeys(urls))
+            return unique_urls[:limit]
+    except Exception as e:
+        logger.warning(f"Live discovery query failed ({e}), using fallback feed.")
         return [
             "https://dev.to/api/articles/latest?per_page=1",
             "https://feeds.bbci.co.uk/news/technology/rss.xml"
@@ -234,13 +241,37 @@ async def main():
     print(" [*] CONCURRENT MULTI-SOURCE NEWS SCRAPER & LLM SUMMARIZER")
     print("=" * 75 + "\n")
 
+    # Interactive Domain / Topic Selection
+    print("Select a Domain / Topic for news scraping:")
+    print("  [1] Tech & AI (Default)")
+    print("  [2] Business & Finance")
+    print("  [3] Health & Medicine")
+    print("  [4] Custom Keyword / Topic")
+    
+    selected_domain = "Tech"
+    try:
+        choice = input("\nEnter your choice (1-4) or press Enter for default [1]: ").strip()
+        if choice == "2":
+            selected_domain = "Business"
+        elif choice == "3":
+            selected_domain = "Health"
+        elif choice == "4":
+            custom = input("Enter custom topic/keyword (e.g., Crypto, Climate, Space, OpenAI): ").strip()
+            selected_domain = custom if custom else "Tech"
+        elif choice == "1" or not choice:
+            selected_domain = "Tech"
+    except Exception:
+        selected_domain = "Tech"
+
+    print(f"\n>> Selected Domain: '{selected_domain}'")
+
     # Step 1: Prepare URLs (Live News + Error Resilience Endpoints)
-    live_urls = await get_live_news_urls(limit=3)
+    live_urls = await get_live_news_urls(topic=selected_domain, limit=3)
     urls = live_urls + [
         "https://httpbin.org/status/404",  # HTTP 404 Error Test
         "https://httpbin.org/delay/15"     # Timeout Error Test
     ]
-    print(f"[STEP 1/3] Queued {len(urls)} URLs ({len(live_urls)} live news + 2 error test endpoints)...\n")
+    print(f"\n[STEP 1/3] Queued {len(urls)} URLs ({len(live_urls)} live '{selected_domain}' news + 2 error test endpoints)...\n")
 
     # Step 2: BONUS 1 - Performance Comparison (Concurrent vs Sequential)
     start_seq = time.perf_counter()
