@@ -2,11 +2,11 @@
   {
     "url": "https://httpbin.org/status/404",
     "fetch_status": "failed",
-    "error": "HTTP 404"
+    "error": "Client error '404 NOT FOUND' for url 'https://httpbin.org/status/404'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
   },
   {
     "url": "https://httpbin.org/delay/15",
     "fetch_status": "failed",
-    "error": "Connection timed out"
+    "error": "Timeout"
   }
 ]

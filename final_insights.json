@@ -1,39 +1,40 @@
 [
   {
     "title": "Regulating AI 'not the right place to start' says Bailey",
-    "summary": "Bank of England Governor Andrew Bailey warned that simply regulating artificial intelligence is insufficient, emphasizing the need for rigorous testing and robust safeguards to mitigate risks. He argued that a focus on regulation alone would miss the broader safety challenges posed by AI development.",
+    "summary": "Bank of England Governor Andrew Bailey says that regulating AI is not the right starting point, emphasizing the need for rigorous testing and safeguards to manage AI risks.",
     "topics": [
       "AI regulation",
       "risk management",
-      "Bank of England",
-      "technology policy"
-    ],
-    "urgency_score": 6,
-    "category": "Tech"
-  },
-  {
-    "title": "Practical Secrets Extraction against Black-box LLMs",
-    "summary": "The paper introduces a black\u2011box framework for extracting confidential credentials that large language models may have memorized, even when only output\u2011only API access is available. It combines cross\u2011validated secret knowledge distillation to build a local proxy model with proxy\u2011guided extraction techniques that leverage truncated top\u2011p sampling, token entropy, and structural priors to efficiently recover secrets. Experiments on controlled benchmarks and real\u2011world LLM services (OpenAI and Claude Code) demonstrate higher recovery rates and lower latency than prior methods, highlighting the practical risk of secret leakage from commercial LLMs.",
-    "topics": [
-      "LLM security",
-      "secret extraction",
-      "black-box attacks",
-      "AI safety",
-      "credential leakage"
+      "Andrew Bailey",
+      "Bank of England"
     ],
     "urgency_score": 8,
     "category": "Tech"
   },
   {
-    "title": "Same Patient, Conflicting Documents: Can AI Preserve the Evidence?",
-    "summary": "The article presents a synthetic experiment using the Symptomato platform to illustrate how missing source documents can conceal conflicts in patient data, even when the final aggregated value appears correct. It explores whether AI techniques can detect and preserve such hidden evidence, highlighting challenges in medical data integrity and the role of machine learning in resolving them.",
+    "title": "Best AI Tools for Photographers in 2026",
+    "summary": "The article reviews the most effective AI-powered applications available to photographers in 2026, covering tools for image editing, organization, and creative enhancement. It highlights how these solutions streamline workflow, improve productivity, and enable new artistic possibilities for both amateurs and professionals.",
     "topics": [
       "AI",
-      "Machine Learning",
-      "Medical Data",
-      "Data Integrity"
+      "Photography",
+      "Productivity",
+      "Tools",
+      "Creative Software"
     ],
-    "urgency_score": 4,
+    "urgency_score": 5,
+    "category": "Tech"
+  },
+  {
+    "title": "Practical Secrets Extraction against Black-box LLMs",
+    "summary": "The paper introduces a black\u2011box framework for extracting confidential credentials that large language models may have memorized, even when only output responses are accessible via commercial APIs. By distilling secret\u2011related behavior into a local proxy and employing guided sampling with entropy and structural priors, the method outperforms prior baselines and demonstrates real\u2011world extraction of masked provider credentials from OpenAI and Claude Code systems.",
+    "topics": [
+      "LLM security",
+      "secret extraction",
+      "black-box attacks",
+      "API vulnerability",
+      "credential leakage"
+    ],
+    "urgency_score": 8,
     "category": "Tech"
   }
 ]
