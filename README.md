@@ -54,12 +54,14 @@ LLM_MODEL=openai/gpt-oss-120b
 
 ### 3. Run the Application
 
-**Option A: Interactive Streamlit Web UI (Recommended for presentations)**
+**Option A: Interactive Web Representation (Single-File HTML/CSS/JS)**
+- Simply double-click [`index.html`](file:///c:/Users/prath/Downloads/Fastapi/index.html) to open in your browser, or start a local server:
 ```bash
-python -m streamlit run app.py
+python -m http.server 8000
 ```
+Then visit `http://localhost:8000/index.html`.
 
-**Option B: Terminal CLI Engine**
+**Option B: Terminal Engine**
 ```bash
 python main.py
 ```
@@ -69,7 +71,7 @@ python main.py
 ## 📂 Project Structure
 ```text
 news-scraper/
-├── app.py                # Interactive Streamlit Web Dashboard UI
+├── index.html            # Standalone Single-File Frontend Dashboard (HTML + CSS + JS)
 ├── main.py               # Complete async fetching, Pydantic models, and LangChain pipeline
 ├── final_insights.json   # Exported structured insights JSON
 ├── failed_articles.json  # Log of gracefully handled errors (404s, Timeouts)

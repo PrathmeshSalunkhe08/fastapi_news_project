@@ -1,14 +1,14 @@
 [
   {
     "title": "Regulating AI 'not the right place to start' says Bailey",
-    "summary": "Bank of England Governor Andrew Bailey says that regulating AI is not the right starting point, emphasizing the need for rigorous testing and safeguards to manage AI risks.",
+    "summary": "Bank of England Governor Andrew Bailey argues that regulating artificial intelligence is not the appropriate starting point, emphasizing the need for rigorous testing and safeguards to manage AI risks.",
     "topics": [
       "AI regulation",
       "risk management",
       "Andrew Bailey",
       "Bank of England"
     ],
-    "urgency_score": 8,
+    "urgency_score": 7,
     "category": "Tech"
   },
   {
@@ -18,21 +18,20 @@
       "AI",
       "Photography",
       "Productivity",
-      "Tools",
-      "Creative Software"
+      "Creative Tools"
     ],
     "urgency_score": 5,
     "category": "Tech"
   },
   {
     "title": "Practical Secrets Extraction against Black-box LLMs",
-    "summary": "The paper introduces a black\u2011box framework for extracting confidential credentials that large language models may have memorized, even when only output responses are accessible via commercial APIs. By distilling secret\u2011related behavior into a local proxy and employing guided sampling with entropy and structural priors, the method outperforms prior baselines and demonstrates real\u2011world extraction of masked provider credentials from OpenAI and Claude Code systems.",
+    "summary": "The paper introduces a black\u2011box framework for extracting confidential credentials that large language models may have memorized, even when only output access is available. It combines cross\u2011validated secret knowledge distillation to build a local proxy model and proxy\u2011guided extraction techniques using entropy and structural priors. Experiments on controlled benchmarks and real\u2011world API services (OpenAI and Claude Code) demonstrate higher recovery rates and lower latency than prior methods, highlighting a tangible risk of credential leakage from commercial LLMs.",
     "topics": [
       "LLM security",
       "secret extraction",
       "black-box attacks",
-      "API vulnerability",
-      "credential leakage"
+      "API credential leakage",
+      "knowledge distillation"
     ],
     "urgency_score": 8,
     "category": "Tech"
