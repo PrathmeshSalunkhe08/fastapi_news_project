@@ -136,7 +136,54 @@ async def fetch_all_sequentially(urls: List[str]) -> List[ArticleInput]:
 
 
 # =============================================================================
-# 4. STRUCTURED LLM SUMMARIZATION (PDF Section 5)
+# 4. DOMAIN-SPECIFIC LIVE NEWS FEEDS
+# =============================================================================
+DOMAIN_FEEDS = {
+    "1": {
+        "name": "Technology & AI",
+        "urls": [
+            "https://feeds.bbci.co.uk/news/technology/rss.xml",
+            "https://dev.to/api/articles/latest?per_page=1",
+            "https://arxiv.org/abs/2609.36941"
+        ]
+    },
+    "2": {
+        "name": "Business & Finance",
+        "urls": [
+            "https://feeds.bbci.co.uk/news/business/rss.xml",
+            "https://www.thehindu.com/business/feeder/default.rss",
+            "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml"
+        ]
+    },
+    "3": {
+        "name": "Health & Science",
+        "urls": [
+            "https://feeds.bbci.co.uk/news/health/rss.xml",
+            "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+            "https://www.thehindu.com/sci-tech/health/feeder/default.rss"
+        ]
+    },
+    "4": {
+        "name": "Politics & National News",
+        "urls": [
+            "https://www.thehindu.com/news/national/feeder/default.rss",
+            "https://www.thehindu.com/news/national/other-states/feeder/default.rss",
+            "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml"
+        ]
+    },
+    "5": {
+        "name": "World News",
+        "urls": [
+            "https://feeds.bbci.co.uk/news/world/rss.xml",
+            "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml",
+            "https://feeds.bbci.co.uk/news/world/asia/rss.xml"
+        ]
+    }
+}
+
+
+# =============================================================================
+# 5. STRUCTURED LLM SUMMARIZATION (PDF Section 5)
 # =============================================================================
 def get_structured_llm():
     """Initializes LangChain LLM configured with .with_structured_output(LLMArticleInsight)."""
@@ -152,7 +199,7 @@ async def process_article_with_llm(structured_llm, article: ArticleInput) -> Opt
     """Sends article content to structured LLM and validates output with Pydantic."""
     logger.info(f"LLM processing started for: {article.url}")
     
-    # Simple clean text snippet
+    # Clean text snippet
     content_snippet = article.content[:4000].strip()
     if not content_snippet:
         return None
@@ -192,23 +239,33 @@ async def process_article_with_llm(structured_llm, article: ArticleInput) -> Opt
 
 
 # =============================================================================
-# 5. MAIN PIPELINE EXECUTION (PDF Section 6, 7, 8 & Bonus 1, 4)
+# 6. MAIN PIPELINE EXECUTION (PDF Section 6, 7, 8 & Bonus 1, 4)
 # =============================================================================
 async def main():
     print("\n" + "=" * 75)
     print(" [*] CONCURRENT MULTI-SOURCE NEWS SCRAPER & LLM SUMMARIZER")
     print("=" * 75 + "\n")
 
+    # Interactive Domain Menu
+    print("Select a News Domain to Fetch & Summarize:")
+    for key, val in DOMAIN_FEEDS.items():
+        default_tag = " (Default)" if key == "1" else ""
+        print(f"  [{key}] {val['name']}{default_tag}")
+
+    choice = input("\nEnter choice (1-5) or press Enter for default [1]: ").strip()
+    selected_domain_info = DOMAIN_FEEDS.get(choice, DOMAIN_FEEDS["1"])
+    domain_name = selected_domain_info["name"]
+    live_urls = selected_domain_info["urls"]
+
+    print(f"\n>> Selected Domain: '{domain_name}'")
+
     # Multi-Source Article URLs + Resilience & Error-Handling Test Endpoints
-    urls = [
-        "https://feeds.bbci.co.uk/news/technology/rss.xml",     # Real Live BBC Technology News Feed
-        "https://arxiv.org/abs/2609.36941",                     # Real Scientific Research Paper
-        "https://dev.to/api/articles/latest?per_page=1",        # Real Developer Tech News API
+    urls = live_urls + [
         "https://httpbin.org/status/404",                       # Resilience Test: HTTP 404 Not Found
         "https://httpbin.org/delay/15"                          # Resilience Test: Timeout Delay
     ]
 
-    print(f"[STEP 1/3] Queued {len(urls)} URLs for concurrent fetching (including error tests)...\n")
+    print(f"\n[STEP 1/3] Queued {len(urls)} URLs ({len(live_urls)} live '{domain_name}' feeds + 2 error tests)...\n")
 
     # Step 1: BONUS 1 - Performance Comparison (Concurrent vs. Sequential)
     start_seq = time.perf_counter()
