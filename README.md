@@ -53,6 +53,13 @@ LLM_MODEL=openai/gpt-oss-120b
 *(Note: If no API key is provided, the script runs in simulation fallback mode to demonstrate full pipeline and Pydantic validation without errors).*
 
 ### 3. Run the Application
+
+**Option A: Interactive Streamlit Web UI (Recommended for presentations)**
+```bash
+python -m streamlit run app.py
+```
+
+**Option B: Terminal CLI Engine**
 ```bash
 python main.py
 ```
@@ -62,6 +69,7 @@ python main.py
 ## 📂 Project Structure
 ```text
 news-scraper/
+├── app.py                # Interactive Streamlit Web Dashboard UI
 ├── main.py               # Complete async fetching, Pydantic models, and LangChain pipeline
 ├── final_insights.json   # Exported structured insights JSON
 ├── failed_articles.json  # Log of gracefully handled errors (404s, Timeouts)
