@@ -1,39 +1,107 @@
 [
   {
-    "title": "Regulating AI 'not the right place to start' says Bailey",
-    "summary": "Bank of England Governor Andrew Bailey argues that regulating artificial intelligence is not the appropriate starting point, emphasizing the need for rigorous testing and safeguards to manage AI risks.",
+    "id": 1,
+    "title": "Cisco warns of actively exploited SD-WAN zero-day",
+    "summary": "Cisco has issued an advisory indicating that a zero\u2011day vulnerability in its SD\u2011WAN platform is being actively exploited in the wild. Attackers are leveraging the flaw to gain unauthorized network access and potentially exfiltrate data. Cisco recommends immediate mitigation steps and the application of forthcoming patches.",
     "topics": [
-      "AI regulation",
-      "risk management",
-      "Andrew Bailey",
-      "Bank of England"
-    ],
-    "urgency_score": 7,
-    "category": "Tech"
-  },
-  {
-    "title": "Best AI Tools for Photographers in 2026",
-    "summary": "The article reviews the most effective AI-powered applications available to photographers in 2026, covering tools for image editing, organization, and creative enhancement. It highlights how these solutions streamline workflow, improve productivity, and enable new artistic possibilities for both amateurs and professionals.",
-    "topics": [
-      "AI",
-      "Photography",
-      "Productivity",
-      "Creative Tools"
-    ],
-    "urgency_score": 5,
-    "category": "Tech"
-  },
-  {
-    "title": "Practical Secrets Extraction against Black-box LLMs",
-    "summary": "The paper introduces a black\u2011box framework for extracting confidential credentials that large language models may have memorized, even when only output access is available. It combines cross\u2011validated secret knowledge distillation to build a local proxy model and proxy\u2011guided extraction techniques using entropy and structural priors. Experiments on controlled benchmarks and real\u2011world API services (OpenAI and Claude Code) demonstrate higher recovery rates and lower latency than prior methods, highlighting a tangible risk of credential leakage from commercial LLMs.",
-    "topics": [
-      "LLM security",
-      "secret extraction",
-      "black-box attacks",
-      "API credential leakage",
-      "knowledge distillation"
+      "SD-WAN",
+      "Cisco",
+      "Zero-Day",
+      "Network Security"
     ],
     "urgency_score": 8,
-    "category": "Tech"
+    "category": "Vulnerability",
+    "source": "thestack.technology",
+    "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPSldvTGNoOTBDb0F6SlFYYjd6Mk5KUU5WQzJDWVhKMWszQ3lXc2U4eTRGYnd6bTU5TWM1ZXdMSUMzOHJWUkNQSWEyZC1ndTZmay1KQ3dGbVhWbUQ1c2FFd3otQ2tLcVJRWEczWFl4S3dVOHQ1V3NBbk5sLWxYMGhybkNjQlZuUmtqVkE?oc=5",
+    "takeaways": [
+      "Apply Cisco's recommended mitigations and monitor for suspicious traffic.",
+      "Prioritize patch deployment for all SD\u2011WAN appliances.",
+      "Conduct a rapid assessment of exposure across the enterprise network."
+    ],
+    "impact_analysis": "Enterprises relying on Cisco SD\u2011WAN could face network compromise, data leakage, and operational disruption if the vulnerability is not quickly remediated, potentially affecting thousands of devices worldwide."
+  },
+  {
+    "id": 2,
+    "title": "AI Agent Breaches Dutch Cybersecurity Organisation DIVD Through Two Zero-Day Software Vulnerabilities",
+    "summary": "An autonomous AI agent successfully exploited two previously unknown software flaws to infiltrate the Dutch cybersecurity agency DIVD. The breach underscores the growing capability of AI to automate sophisticated attack chains without human intervention. DIVD is now working to patch the vulnerabilities and assess the scope of the intrusion.",
+    "topics": [
+      "AI Agent",
+      "Zero-Day",
+      "Dutch Cybersecurity",
+      "Supply Chain"
+    ],
+    "urgency_score": 7,
+    "category": "Threat",
+    "source": "The420.in",
+    "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPZVhwanRUclVGTjlDQWhUUEcxM3JVWUlZY0dkUVJZZmE0cU5GaTR3cHFaczNwN3NKZjhZUDFadG5vM1FZYm5pbUtYMFpsTlRsQ3pnQVAwX0h3NlRKVnpUYUxnMjNLcV9jWUg3U09yZzVjTjk3d05DWXpPXzhHR1VPUVp3?oc=5",
+    "takeaways": [
+      "Implement AI\u2011driven threat detection to spot automated exploit attempts.",
+      "Accelerate patch management cycles for newly disclosed vulnerabilities.",
+      "Review and harden supply\u2011chain dependencies to reduce attack surface."
+    ],
+    "impact_analysis": "The incident demonstrates that AI can dramatically lower the barrier for exploiting zero\u2011days, raising the risk profile for critical infrastructure and prompting a reassessment of defensive strategies across government and private sectors."
+  },
+  {
+    "id": 3,
+    "title": "Bitget Confirms Third-Party Zero-Day Behind $387.5 Million Cryptocurrency Theft",
+    "summary": "Cryptocurrency exchange Bitget disclosed that a third\u2011party component contained a zero\u2011day vulnerability that was leveraged to steal $387.5\u202fmillion in digital assets. The exploit bypassed existing security controls, highlighting the danger of supply\u2011chain flaws in high\u2011value financial platforms. Bitget has patched the issue and is cooperating with law enforcement.",
+    "topics": [
+      "Cryptocurrency",
+      "Zero-Day",
+      "Exchange",
+      "Theft"
+    ],
+    "urgency_score": 9,
+    "category": "Financial Crime",
+    "source": "The Hacker News",
+    "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNTGN0VkgwWnoycGhYRlZFVUVydkNVb05PajdSRVM1ZXp6eEFWWkZiT3luR3ljYWs5eVN3NTBLQ2ZVT0haU0lqUUgzVG9KSm9ITXRSM1JLdzZzMkgtQmxJQ0U0QUloUWtQY0kxc1FIYy0yVzJfQjVtemE4c29HMmZ6TQ?oc=5",
+    "takeaways": [
+      "Audit and secure all third\u2011party libraries used in crypto platforms.",
+      "Enhance real\u2011time transaction monitoring for anomalous activity.",
+      "Encourage users to adopt multi\u2011factor authentication and cold storage."
+    ],
+    "impact_analysis": "The massive loss erodes confidence in centralized crypto exchanges, may trigger stricter regulatory scrutiny, and underscores the critical need for robust supply\u2011chain security practices in the digital asset ecosystem."
+  },
+  {
+    "id": 4,
+    "title": "Citrix urges immediate upgrades of NetScaler amid widespread exploitation attempts",
+    "summary": "Citrix has warned that attackers are actively probing and exploiting a zero\u2011day vulnerability in its NetScaler ADC products. The company is urging customers to apply the emergency firmware update without delay to prevent remote code execution. Ongoing exploitation attempts have been observed across multiple regions.",
+    "topics": [
+      "Citrix",
+      "NetScaler",
+      "Zero-Day",
+      "Exploitation"
+    ],
+    "urgency_score": 8,
+    "category": "Vulnerability",
+    "source": "Cybersecurity Dive",
+    "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPQldjTkhIeDJUWFlLLUN4Nkx0ckRfYjVBNHR0aU1JZkJ6d18yZlJWdVRWVjJueVc5bmxfM1RIdGI3MU1zVTZQR3JfLVpBemI1d2g2cXRrellCWUhjdEVCcndOT2YzUTVVNzFvZzAwdFZuX0Z4Ym4taUZBUGxicm15Q21MWW5HMkRyMkt1QTRB?oc=5",
+    "takeaways": [
+      "Deploy the latest NetScaler firmware immediately.",
+      "Enable intrusion detection signatures specific to the NetScaler exploit.",
+      "Perform a post\u2011patch validation to ensure no backdoors remain."
+    ],
+    "impact_analysis": "Given NetScaler's widespread deployment in enterprise data centers, successful exploitation could lead to full system compromise, data theft, and prolonged service outages, making rapid remediation essential."
+  },
+  {
+    "id": 5,
+    "title": "Apple Patches CoreGraphics Zero-Day Linked To Sophisticated Targeted Attacks",
+    "summary": "Apple released a security update that fixes a CoreGraphics zero\u2011day vulnerability that had been used in highly targeted attacks against macOS and iOS devices. The flaw allowed attackers to execute arbitrary code through crafted image files. Users are advised to install the update promptly to mitigate the risk.",
+    "topics": [
+      "Apple",
+      "CoreGraphics",
+      "Zero-Day",
+      "Targeted Attacks"
+    ],
+    "urgency_score": 7,
+    "category": "Vulnerability",
+    "source": "LinkedIn",
+    "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNMGJTaHAwWk5IeFpCSWJPV3lNX0RLRFdQbDFSRTc1MWtLSWdfbkNvME5oR2NIQk1WOHlzVmszdzllcm9tX3poR2ZIWC1kN2lLeG5sZDdabTd6YXJiQ1pGNlVNTkdRS1FldEtvSUR0eE02UFdCdWtYM295MktaZEhpZjNGQ1BfaGlManJEdjhkaDZrMjRIZW5lNw?oc=5",
+    "takeaways": [
+      "Update all macOS and iOS devices to the latest version.",
+      "Restrict opening of image files from untrusted sources.",
+      "Monitor endpoint logs for anomalous CoreGraphics activity."
+    ],
+    "impact_analysis": "While the vulnerability affects a narrower user base compared to enterprise platforms, its use in espionage\u2011grade attacks raises concerns for high\u2011value targets and reinforces the importance of timely patching across the Apple ecosystem."
   }
 ]

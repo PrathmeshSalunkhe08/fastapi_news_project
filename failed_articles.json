@@ -1,10 +1,10 @@
 [
   {
     "url": "https://httpbin.org/status/404",
-    "error": "Client error '404 NOT FOUND' for url 'https://httpbin.org/status/404'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+    "error": "Client Error 404 NOT FOUND (Gracefully Handled)"
   },
   {
     "url": "https://httpbin.org/delay/15",
-    "error": "Connection Timed Out"
+    "error": "Connection Timeout >6.0s (Gracefully Intercepted)"
   }
 ]

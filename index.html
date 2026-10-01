@@ -2,997 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI News Intelligence Dashboard</title>
-  <meta name="description" content="Interactive representation of concurrent news scraping and structured AI insights" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>NewsIntel — Universal AI Real-Time News Search</title>
+  <meta name="description" content="Search ANY topic, keyword, category, or event and get 3 latest live news with deep dive analysis" />
+  
+  <!-- Professional Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --bg-card: rgba(30, 41, 59, 0.85);
-      --bg-card-hover: rgba(51, 65, 85, 0.95);
-      --border-color: rgba(148, 163, 184, 0.15);
-      --border-hover: rgba(56, 189, 248, 0.4);
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --accent-blue: #38bdf8;
-      --accent-purple: #a855f7;
-      --accent-emerald: #10b981;
-      --accent-amber: #f59e0b;
-      --accent-rose: #f43f5e;
-      --glass-bg: rgba(15, 23, 42, 0.75);
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-      --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.2);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 45%, #020617 100%);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.5;
-      padding-bottom: 60px;
-    }
-
-    /* Container */
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* Navigation Header */
-    header {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .nav-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 70px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-    }
-
-    .brand-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-    }
-
-    .brand-subtitle {
-      font-size: 12px;
-      color: var(--accent-blue);
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--accent-emerald);
-      border-radius: 50%;
-      display: inline-block;
-      box-shadow: 0 0 8px var(--accent-emerald);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    /* Buttons */
-    .btn {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
-      color: white;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
-    }
-
-    .btn-secondary {
-      background: rgba(51, 65, 85, 0.6);
-      color: var(--text-primary);
-      border-color: var(--border-color);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(71, 85, 105, 0.8);
-      border-color: var(--text-secondary);
-      transform: translateY(-1px);
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 36px 0 24px;
-      text-align: center;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      color: var(--accent-blue);
-      font-weight: 600;
-      margin-bottom: 14px;
-    }
-
-    .hero h1 {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      background: linear-gradient(to right, #ffffff, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin: 28px 0;
-    }
-
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--border-hover);
-    }
-
-    .stat-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-
-    .stat-icon.blue { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); }
-    .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
-    .stat-icon.amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
-    .stat-icon.rose { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); }
-
-    .stat-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1.1;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      font-weight: 500;
-      margin-top: 2px;
-    }
-
-    /* Controls Bar */
-    .controls-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 16px 20px;
-      margin-bottom: 28px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--shadow-md);
-    }
-
-    .search-box {
-      flex: 1;
-      min-width: 260px;
-      position: relative;
-    }
-
-    .search-box input {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 10px 14px 10px 38px;
-      color: #ffffff;
-      font-size: 14px;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .search-box input:focus {
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-    }
-
-    .search-box svg {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-    }
-
-    .filter-group {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .category-pills {
-      display: flex;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.7);
-      padding: 4px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-    }
-
-    .pill {
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      transition: all 0.2s;
-    }
-
-    .pill.active {
-      background: var(--accent-blue);
-      color: #0f172a;
-    }
-
-    .pill:hover:not(.active) {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .select-dropdown {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 8px 12px;
-      color: #ffffff;
-      font-size: 13px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .select-dropdown option {
-      background: #0f172a;
-      color: #ffffff;
-    }
-
-    /* News Cards Grid */
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 24px;
-    }
-
-    .news-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .news-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--accent-blue);
-      transition: width 0.2s;
-    }
-
-    .news-card.category-Tech::before { background: var(--accent-blue); }
-    .news-card.category-Business::before { background: var(--accent-amber); }
-    .news-card.category-Health::before { background: var(--accent-emerald); }
-    .news-card.category-Other::before { background: var(--accent-purple); }
-
-    .news-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--border-hover);
-      box-shadow: var(--shadow-glow);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 14px;
-    }
-
-    .badges {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .badge {
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .badge-tech { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
-    .badge-business { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge-health { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-other { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-
-    /* Urgency Meter */
-    .urgency-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .urgency-badge {
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .urgency-high { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
-    .urgency-mid { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .urgency-low { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1.35;
-      margin-bottom: 12px;
-    }
-
-    .card-summary {
-      font-size: 14px;
-      color: #cbd5e1;
-      line-height: 1.6;
-      margin-bottom: 18px;
-    }
-
-    .topics-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: auto;
-      padding-top: 14px;
-      border-top: 1px solid rgba(148, 163, 184, 0.1);
-    }
-
-    .topic-tag {
-      font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-secondary);
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-color);
-      padding: 3px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .topic-tag:hover {
-      color: var(--accent-blue);
-      border-color: var(--accent-blue);
-      background: rgba(56, 189, 248, 0.1);
-    }
-
-    /* Modal Styles */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-card {
-      background: #0f172a;
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      max-width: 760px;
-      width: 100%;
-      max-height: 85vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-      overflow: hidden;
-    }
-
-    .modal-header {
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .close-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 22px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .close-btn:hover {
-      color: #ffffff;
-    }
-
-    .modal-body {
-      padding: 24px;
-      overflow-y: auto;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: #e2e8f0;
-      background: #020617;
-    }
-
-    pre {
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .modal-footer {
-      padding: 16px 24px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      background: #0f172a;
-    }
-
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-secondary);
-      grid-column: 1 / -1;
-    }
-
-    .empty-state svg {
-      margin-bottom: 14px;
-      opacity: 0.5;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 28px; }
-      .news-grid { grid-template-columns: 1fr; }
-      .controls-panel { flex-direction: column; align-items: stretch; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
 
-  <!-- Sticky Navbar -->
+  <!-- Top Multi-Color Theme Line (White, Red, Black, Grey, Blue) -->
+  <div class="top-theme-bar"></div>
+
+  <!-- Top Enterprise Navbar -->
   <header>
-    <div class="container nav-content">
+    <div class="container nav-wrap">
       <div class="brand">
-        <div class="brand-icon">⚡</div>
-        <div>
-          <div class="brand-title">NewsIntel AI Dashboard</div>
-          <div class="brand-subtitle"><span class="live-dot"></span> Pydantic + Async Scraper Engine</div>
+        <div class="brand-logo">⚡</div>
+        <div class="brand-text">
+          <span class="brand-title">NewsIntel</span>
+          <span class="brand-sub">Universal Real-Time News Search & Deep Dive</span>
         </div>
       </div>
 
-      <div class="header-actions">
-        <input type="file" id="fileInput" accept=".json" style="display: none;" />
-        <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
-          📂 Import JSON
-        </button>
-        <button class="btn btn-secondary" onclick="openResilienceModal()">
-          🛡️ Failure Log
-        </button>
-        <button class="btn btn-primary" onclick="openJsonModal()">
-          💾 Raw JSON
-        </button>
+      <div class="header-right">
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
+  <!-- Main Container -->
   <main class="container">
-    
-    <!-- Hero Banner -->
-    <section class="hero">
-      <div class="hero-badge">🚀 Asynchronous Multi-Source News Pipeline</div>
-      <h1>Structured AI Executive Briefing</h1>
-      <p>Real-time insights extracted concurrently using <code>httpx</code>, validated strictly against <code>Pydantic</code> models and summarized with <code>LangChain</code>.</p>
+
+    <!-- ================= DIV 1: UNIVERSAL SEARCH & CATEGORY INPUT ================= -->
+    <section id="div-input" class="main-card" aria-label="Universal Search Input">
+      <div class="card-header">
+        <div class="header-title-wrap">
+          <span class="badge-number-red">1</span>
+          <div>
+            <h2>Search Any News, Topic, or Category</h2>
+            <p>Type ANY keyword, topic, or event (e.g. <em>"Politics of Maharashtra"</em>, <em>"IPL Cricket"</em>, <em>"Stock Market"</em>, <em>"Tesla"</em>) or pick a category</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prominent Search Bar -->
+      <div class="main-search-wrapper">
+        <div class="search-input-field">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Type ANY topic (e.g., Politics of Maharashtra, Crypto, AI, Space Exploration)..." 
+            autofocus 
+          />
+          <button id="clearBtn" class="clear-btn" style="display: none;" onclick="clearSearch()">&times;</button>
+        </div>
+
+        <!-- Sleek Segmented News Count Control -->
+        <div class="count-selector-group">
+          <span class="count-label">Articles:</span>
+          <div class="segmented-control">
+            <button type="button" class="segment-btn" data-val="3" onclick="selectCount(3)">3</button>
+            <button type="button" class="segment-btn active" data-val="5" onclick="selectCount(5)">5</button>
+            <button type="button" class="segment-btn" data-val="8" onclick="selectCount(8)">8</button>
+            <button type="button" class="segment-btn" data-val="10" onclick="selectCount(10)">10</button>
+          </div>
+        </div>
+        <input type="hidden" id="newsLimitSelect" value="5" />
+
+        <button class="btn btn-primary btn-search" id="fetchNewsBtn" onclick="executeSearch()">
+          <span id="searchBtnText">⚡ Search 5 Latest News</span>
+        </button>
+      </div>
+
+      <!-- Quick Suggested Categories (Click to fill search bar) -->
+      <div class="quick-tags-wrap">
+        <span class="quick-tags-label">Quick Suggestions:</span>
+        <div class="quick-tags" id="quickTags">
+          <button class="tag-pill tag-red" onclick="setQueryAndSearch('Politics of Maharashtra')">🏛️ Politics of Maharashtra</button>
+          <button class="tag-pill tag-blue" onclick="setQueryAndSearch('Artificial Intelligence & LLMs')">🤖 AI & LLMs</button>
+          <button class="tag-pill tag-black" onclick="setQueryAndSearch('Technology & Software')">⚡ Tech & Software</button>
+          <button class="tag-pill tag-grey" onclick="setQueryAndSearch('Indian Stock Market & Business')">📈 Business & Finance</button>
+          <button class="tag-pill tag-red" onclick="setQueryAndSearch('Cybersecurity Zero Day')">🔒 Cybersecurity</button>
+          <button class="tag-pill tag-blue" onclick="setQueryAndSearch('Cricket & Sports News')">🏏 Sports / Cricket</button>
+        </div>
+      </div>
     </section>
 
-    <!-- Dynamic Metrics Dashboard -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon blue">📰</div>
-        <div>
-          <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-label">Total Articles Analyzed</div>
+
+    <!-- ================= DIV 2: LATEST NEWS & DEEP DIVE ================= -->
+    <section id="div-news" class="main-card" aria-label="Latest News & Deep Dive">
+      <div class="card-header">
+        <div class="header-title-wrap">
+          <span class="badge-number-blue">2</span>
+          <div>
+            <h2 id="newsSectionTitle">5 Latest News Briefings</h2>
+            <p id="newsSectionSub">Type any query above to fetch live real-time articles & deep dive insights</p>
+          </div>
+        </div>
+        <div class="meta-indicators" id="metaIndicators" style="display: none;">
+          <div class="meta-pill"><span class="meta-val" id="statArticleCount">5</span> Articles</div>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-icon green">⚡</div>
-        <div>
-          <div class="stat-value" id="statAvgUrgency">0.0</div>
-          <div class="stat-label">Average Urgency (1-10)</div>
+      <!-- 3 News Cards Container -->
+      <div class="news-grid" id="newsGrid">
+        <div class="empty-state">
+          <p style="font-size: 15px; color: var(--brand-black); font-weight: 700;">👆 Type any topic above or click a quick suggestion to fetch live news</p>
+          <small style="color: var(--text-tertiary); margin-top: 6px; display: block;">Supports literally any search term: Politics, Sports, Tech, Business, World News, etc.</small>
         </div>
       </div>
-
-      <div class="stat-card">
-        <div class="stat-icon rose">🚨</div>
-        <div>
-          <div class="stat-value" id="statHighUrgency">0</div>
-          <div class="stat-label">High Priority (Score &ge; 7)</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon amber">🛡️</div>
-        <div>
-          <div class="stat-value" id="statHandledErrors">2</div>
-          <div class="stat-label">Handled 404/Timeouts</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Controls & Filters -->
-    <div class="controls-panel">
-      <div class="search-box">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="searchInput" placeholder="Search keywords, topics, titles, or summaries..." />
-      </div>
-
-      <div class="filter-group">
-        <div class="category-pills">
-          <button class="pill active" data-cat="ALL">All</button>
-          <button class="pill" data-cat="Tech">Tech</button>
-          <button class="pill" data-cat="Business">Business</button>
-          <button class="pill" data-cat="Health">Health</button>
-          <button class="pill" data-cat="Other">Other</button>
-        </div>
-
-        <select class="select-dropdown" id="sortSelect">
-          <option value="urgency-desc">⚡ Urgency: High to Low</option>
-          <option value="urgency-asc">⚡ Urgency: Low to High</option>
-          <option value="title-asc">🔤 Title: A-Z</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Articles Grid -->
-    <div class="news-grid" id="newsGrid">
-      <!-- Injected dynamically via JS -->
-    </div>
+    </section>
 
   </main>
 
-  <!-- Modal: Raw JSON Viewer -->
-  <div class="modal-overlay" id="jsonModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title">💾 Structured JSON Output (Pydantic Validated)</div>
-        <button class="close-btn" onclick="closeJsonModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <pre><code id="jsonCodeView"></code></pre>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="copyJsonToClipboard()">📋 Copy JSON</button>
-        <button class="btn btn-primary" onclick="downloadJsonFile()">📥 Download JSON</button>
-      </div>
-    </div>
-  </div>
+  <!-- Non-intrusive Toast -->
+  <div id="toast" class="toast"></div>
 
-  <!-- Modal: Resilience & Error Log -->
-  <div class="modal-overlay" id="resilienceModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title">🛡️ Error Handling & Resilience Audit Log</div>
-        <button class="close-btn" onclick="closeResilienceModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div style="margin-bottom: 12px; color: #94a3b8;">The following endpoints were intentionally tested concurrently to verify error handling without pipeline disruption:</div>
-        <pre><code id="failedJsonCodeView"></code></pre>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeResilienceModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vanilla JavaScript Logic -->
-  <script>
-    // Embedded initial data from live pipeline
-    let articlesData = [
-      {
-        "title": "Regulating AI 'not the right place to start' says Bailey",
-        "summary": "Bank of England Governor Andrew Bailey argues that regulating artificial intelligence is not the appropriate starting point, emphasizing the need for rigorous testing and safeguards to manage AI risks.",
-        "topics": ["AI regulation", "risk management", "Andrew Bailey", "Bank of England"],
-        "urgency_score": 7,
-        "category": "Tech"
-      },
-      {
-        "title": "Best AI Tools for Photographers in 2026",
-        "summary": "The article reviews the most effective AI-powered applications available to photographers in 2026, covering tools for image editing, organization, and creative enhancement. It highlights how these solutions streamline workflow and enable new artistic possibilities.",
-        "topics": ["AI", "Photography", "Productivity", "Creative Tools"],
-        "urgency_score": 5,
-        "category": "Tech"
-      },
-      {
-        "title": "Practical Secrets Extraction against Black-box LLMs",
-        "summary": "The paper introduces a black-box framework for extracting confidential credentials that large language models may have memorized. Experiments on controlled benchmarks and real-world API services demonstrate high recovery rates, highlighting credential leakage risks.",
-        "topics": ["LLM security", "secret extraction", "black-box attacks", "API credential leakage"],
-        "urgency_score": 8,
-        "category": "Tech"
-      }
-    ];
-
-    let failedData = [
-      {
-        "url": "https://httpbin.org/status/404",
-        "error": "Client error '404 NOT FOUND' — Handled gracefully"
-      },
-      {
-        "url": "https://httpbin.org/delay/15",
-        "error": "Connection Timed Out (>8.0s) — Handled gracefully"
-      }
-    ];
-
-    let currentCategory = "ALL";
-    let searchQuery = "";
-    let sortMode = "urgency-desc";
-
-    // Initialize application
-    document.addEventListener("DOMContentLoaded", () => {
-      // Try to load latest final_insights.json automatically if served on HTTP server
-      fetch("final_insights.json")
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data) && data.length > 0) {
-            articlesData = data;
-            render();
-          }
-        })
-        .catch(() => {
-          render(); // Use embedded fallback data
-        });
-
-      fetch("failed_articles.json")
-        .then(res => res.json())
-        .then(data => { if (Array.isArray(data)) failedData = data; })
-        .catch(() => {});
-
-      setupEventListeners();
-      render();
-    });
-
-    function setupEventListeners() {
-      // Search Input
-      document.getElementById("searchInput").addEventListener("input", (e) => {
-        searchQuery = e.target.value.toLowerCase().trim();
-        render();
-      });
-
-      // Category Filter Pills
-      document.querySelectorAll(".category-pills .pill").forEach(pill => {
-        pill.addEventListener("click", () => {
-          document.querySelectorAll(".category-pills .pill").forEach(p => p.classList.remove("active"));
-          pill.classList.add("active");
-          currentCategory = pill.getAttribute("data-cat");
-          render();
-        });
-      });
-
-      // Sort Select
-      document.getElementById("sortSelect").addEventListener("change", (e) => {
-        sortMode = e.target.value;
-        render();
-      });
-
-      // File Import Handler
-      document.getElementById("fileInput").addEventListener("change", handleFileUpload);
-    }
-
-    function handleFileUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const parsed = JSON.parse(event.target.result);
-          if (Array.isArray(parsed)) {
-            articlesData = parsed;
-            render();
-            alert(`✅ Successfully loaded ${parsed.length} articles!`);
-          } else {
-            alert("⚠️ Invalid format: Expected a JSON array of articles.");
-          }
-        } catch (err) {
-          alert("❌ Error parsing JSON file.");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function render() {
-      updateMetrics();
-      renderGrid();
-    }
-
-    function updateMetrics() {
-      document.getElementById("statTotal").textContent = articlesData.length;
-      
-      const totalUrgency = articlesData.reduce((acc, item) => acc + (item.urgency_score || 0), 0);
-      const avg = articlesData.length > 0 ? (totalUrgency / articlesData.length).toFixed(1) : "0.0";
-      document.getElementById("statAvgUrgency").textContent = avg;
-
-      const highCount = articlesData.filter(item => (item.urgency_score || 0) >= 7).length;
-      document.getElementById("statHighUrgency").textContent = highCount;
-
-      document.getElementById("statHandledErrors").textContent = failedData.length;
-    }
-
-    function renderGrid() {
-      const grid = document.getElementById("newsGrid");
-      grid.innerHTML = "";
-
-      // Filtering
-      let filtered = articlesData.filter(item => {
-        const matchesCategory = (currentCategory === "ALL") || (item.category === currentCategory);
-        const matchesSearch = !searchQuery || 
-          (item.title && item.title.toLowerCase().includes(searchQuery)) ||
-          (item.summary && item.summary.toLowerCase().includes(searchQuery)) ||
-          (item.topics && item.topics.some(t => t.toLowerCase().includes(searchQuery)));
-        return matchesCategory && matchesSearch;
-      });
-
-      // Sorting
-      filtered.sort((a, b) => {
-        if (sortMode === "urgency-desc") return (b.urgency_score || 0) - (a.urgency_score || 0);
-        if (sortMode === "urgency-asc") return (a.urgency_score || 0) - (b.urgency_score || 0);
-        if (sortMode === "title-asc") return (a.title || "").localeCompare(b.title || "");
-        return 0;
-      });
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div class="empty-state">
-            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <h3>No matching articles found</h3>
-            <p style="margin-top: 6px;">Try adjusting your search terms or category filter.</p>
-          </div>
-        `;
-        return;
-      }
-
-      filtered.forEach(article => {
-        const card = document.createElement("div");
-        const category = article.category || "Other";
-        card.className = `news-card category-${category}`;
-
-        const score = article.urgency_score || 5;
-        const urgencyClass = score >= 7 ? "urgency-high" : (score >= 4 ? "urgency-mid" : "urgency-low");
-
-        const topicsHtml = (article.topics || []).map(t => 
-          `<span class="topic-tag" onclick="filterByTopic('${escapeHtml(t)}')">#${escapeHtml(t)}</span>`
-        ).join("");
-
-        card.innerHTML = `
-          <div>
-            <div class="card-header">
-              <div class="badges">
-                <span class="badge badge-${category.toLowerCase()}">${category}</span>
-              </div>
-              <div class="urgency-container">
-                <span class="urgency-badge ${urgencyClass}">⚡ Urgency: ${score}/10</span>
-              </div>
-            </div>
-
-            <h2 class="card-title">${escapeHtml(article.title || "Untitled Article")}</h2>
-            <p class="card-summary">${escapeHtml(article.summary || "")}</p>
-          </div>
-
-          <div class="topics-wrap">
-            ${topicsHtml}
-          </div>
-        `;
-
-        grid.appendChild(card);
-      });
-    }
-
-    function filterByTopic(topic) {
-      document.getElementById("searchInput").value = topic;
-      searchQuery = topic.toLowerCase();
-      render();
-    }
-
-    function escapeHtml(str) {
-      if (!str) return "";
-      return str.replace(/[&<>'"]/g, 
-        tag => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          "'": '&#39;',
-          '"': '&quot;'
-        }[tag] || tag)
-      );
-    }
-
-    // Modal Handlers
-    function openJsonModal() {
-      document.getElementById("jsonCodeView").textContent = JSON.stringify(articlesData, null, 2);
-      document.getElementById("jsonModal").classList.add("active");
-    }
-
-    function closeJsonModal() {
-      document.getElementById("jsonModal").classList.remove("active");
-    }
-
-    function openResilienceModal() {
-      document.getElementById("failedJsonCodeView").textContent = JSON.stringify(failedData, null, 2);
-      document.getElementById("resilienceModal").classList.add("active");
-    }
-
-    function closeResilienceModal() {
-      document.getElementById("resilienceModal").classList.remove("active");
-    }
-
-    function copyJsonToClipboard() {
-      navigator.clipboard.writeText(JSON.stringify(articlesData, null, 2))
-        .then(() => alert("📋 JSON copied to clipboard!"))
-        .catch(() => alert("Failed to copy JSON."));
-    }
-
-    function downloadJsonFile() {
-      const blob = new Blob([JSON.stringify(articlesData, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "final_insights.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    // Close modals on overlay click
-    window.onclick = function(e) {
-      if (e.target.classList.contains("modal-overlay")) {
-        e.target.classList.remove("active");
-      }
-    };
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
